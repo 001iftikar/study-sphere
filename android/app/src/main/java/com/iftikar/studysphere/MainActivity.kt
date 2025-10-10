@@ -10,7 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import com.iftikar.studysphere.presentation.role.RoleChooseScreen
 import com.iftikar.studysphere.ui.theme.StudySphereTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,12 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StudySphereTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Text(
-                        text = "Jvm deprecated",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                RoleChooseScreen()
             }
         }
     }
