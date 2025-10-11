@@ -25,13 +25,17 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil3.compose.SubcomposeAsyncImage
 import com.iftikar.studysphere.R
+import com.iftikar.studysphere.presentation.navigation.Routes
 import com.iftikar.studysphere.ui.theme.RoleButtonBackGround
 import com.iftikar.studysphere.ui.theme.RoleScreenBackground
 
 @Composable
-fun RoleChooseScreen() {
+fun RoleChooseScreen(
+    navHostController: NavHostController
+) {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -46,7 +50,6 @@ fun RoleChooseScreen() {
                     )
                 )
         ) {
-            // Text at the top
             Text(
                 text = "Welcome to Study Sphere",
                 modifier = Modifier
@@ -57,7 +60,6 @@ fun RoleChooseScreen() {
                 style = MaterialTheme.typography.displayMedium
             )
 
-            // Role options in the center
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -68,7 +70,7 @@ fun RoleChooseScreen() {
                 RoleSelectionItem(
                     icon = R.drawable.admin,
                     text = "I am an admin",
-                    onClick = {}
+                    onClick = {navHostController.navigate(Routes.AdminLoginScreenRoute)}
                 )
                 RoleSelectionItem(
                     icon = R.drawable.teacher,

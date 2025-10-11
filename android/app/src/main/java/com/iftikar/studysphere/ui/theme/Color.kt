@@ -20,3 +20,11 @@ val RoleButtonBackGround = listOf(
     Color(0xFF4E4376),
     Color(0xFF2B5876)
 )
+
+val SignInUpBackground = listOf(
+    Color(0xFF2C2C2C),
+    Color(0xFF232323),
+    Color(0xFF1B1B1B),
+    Color(0xFF141414),
+    Color(0xFF0D0D0D)
+)
