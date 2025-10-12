@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.iftikar.studysphere.presentation.role.RoleChooseScreen
-import com.iftikar.studysphere.presentation.role.admin.AdminRegisterScreen
+import com.iftikar.studysphere.presentation.role.admin.AdminSignUpScreen
 import com.iftikar.studysphere.presentation.role.admin.AdminSignInScreen
 
 @Composable
@@ -28,7 +28,7 @@ fun Navigation() {
         }
 
         composable<Routes.AdminRegisterScreenRoute> {
-            AdminRegisterScreen(
+            AdminSignUpScreen(
                 navHostController = navHostController
             )
         }

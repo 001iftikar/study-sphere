@@ -18,7 +18,6 @@ import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -41,11 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.iftikar.studysphere.presentation.components.SignUpInButtonComponent
 import com.iftikar.studysphere.presentation.components.SignUpInTextFieldComponent
+import com.iftikar.studysphere.presentation.components.TypewriterTextComponent
 import com.iftikar.studysphere.ui.theme.SignInUpBackground
 import kotlinx.coroutines.launch
 
 @Composable
-fun AdminRegisterScreen(
+fun AdminSignUpScreen(
     navHostController: NavHostController
 ) {
     Surface(
@@ -56,13 +55,13 @@ fun AdminRegisterScreen(
                 .fillMaxSize()
                 .background(brush = Brush.verticalGradient(SignInUpBackground))
         ) {
-            Text(
-                text = "Register your institution",
+
+            TypewriterTextComponent(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 36.dp),
-                color = Color.White,
-                style = MaterialTheme.typography.displaySmall
+                    .align(Alignment.TopStart)
+                    .padding(top = 144.dp, start = 40.dp),
+                text = "Something something",
+                text2 = "Anything Anything"
             )
 
             LazyColumn(
@@ -78,7 +77,7 @@ fun AdminRegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         value = "",
                         onValueChange = {},
-                        label = "Admin full name",
+                        label = "Full name",
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words
                         )
@@ -91,7 +90,7 @@ fun AdminRegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         value = "",
                         onValueChange = {},
-                        label = "Admin username",
+                        label = "Username",
                     )
                     Spacer(Modifier.height(8.dp))
                 }
@@ -101,7 +100,7 @@ fun AdminRegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         value = "",
                         onValueChange = {},
-                        label = "Admin email",
+                        label = "Email",
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email
                         )
@@ -114,39 +113,14 @@ fun AdminRegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         value = "",
                         onValueChange = {},
-                        label = "Admin phone number",
+                        label = "Phone number",
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone
                         )
                     )
                     Spacer(Modifier.height(8.dp))
                 }
-                item {
-                    SignUpInTextFieldComponent(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = "",
-                        onValueChange = {},
-                        label = "Institution name",
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Words
-                        )
-                    )
-                    Spacer(Modifier.height(8.dp))
-                }
-                item {
-                    SignUpInTextFieldComponent(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = "",
-                        onValueChange = {},
-                        label = "Institution unique name",
-                    )
-                    Spacer(Modifier.height(8.dp))
-                }
-                item {
-                    InstitutionSecretKeyField()
 
-                    Spacer(Modifier.height(8.dp))
-                }
                 item {
                     SignUpInTextFieldComponent(
                         modifier = Modifier.fillMaxWidth(),
@@ -176,7 +150,7 @@ fun AdminRegisterScreen(
 
                 item {
                     SignUpInButtonComponent(
-                        title = "Register",
+                        title = "Sign up",
                         onClick = {
                             // todo register institution
                         }
@@ -188,14 +162,14 @@ fun AdminRegisterScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Already registered?")
+                        Text("Already have an account?")
                         TextButton(
                             onClick = {
                                 navHostController.popBackStack()
                             }
                         ) {
                             Text(
-                                text = "log in",
+                                text = "Log in",
                                 textDecoration = TextDecoration.Underline
                             )
                         }
