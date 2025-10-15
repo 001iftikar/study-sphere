@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+coilComposeAndroid = "3.3.0"
 hiltAndroid = "2.57.2"
 hiltNavigationCompose = "1.3.0"
 kotlin = "2.2.20"
@@ -11,10 +12,13 @@ kotlinxSerializationJson = "1.9.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.10.00"
+materialIconsExtended = "1.7.8"
 
 [libraries]
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+coil-compose-android = { module = "io.coil-kt.coil3:coil-compose-android", version.ref = "coilComposeAndroid" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
