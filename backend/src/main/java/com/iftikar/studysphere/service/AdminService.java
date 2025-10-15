@@ -20,21 +20,21 @@ public class AdminService {
 
     @Transactional
     public void updateAdmin(Admin admin) {
-        Admin existringAdmin = adminRepository.findById(admin.getId())
+        Admin existingAdmin = adminRepository.findById(admin.getId())
                 .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         // we can change either all details or partial except for password, I will make another fun to change password
 
         if (admin.getEmail() != null) {
-            existringAdmin.setEmail(admin.getEmail());
+            existingAdmin.setEmail(admin.getEmail());
         }
 
         if (admin.getName() != null) {
-            existringAdmin.setName(admin.getName());
+            existingAdmin.setName(admin.getName());
         }
 
         if (admin.getPhone() != null) {
-            existringAdmin.setPhone(admin.getPhone());
+            existingAdmin.setPhone(admin.getPhone());
         }
     }
 
