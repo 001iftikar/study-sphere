@@ -1,4 +1,4 @@
-package com.iftikar.studysphere.presentation.role
+package com.iftikar.studysphere.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
