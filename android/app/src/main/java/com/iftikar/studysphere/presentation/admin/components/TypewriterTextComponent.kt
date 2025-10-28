@@ -1,4 +1,4 @@
-package com.iftikar.studysphere.presentation.components
+package com.iftikar.studysphere.presentation.admin.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

@@ -44,6 +44,12 @@ android {
 
 dependencies {
 
+    // Appwrite
+    implementation("io.appwrite:sdk-for-android:11.2.1")
+
+    // datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)

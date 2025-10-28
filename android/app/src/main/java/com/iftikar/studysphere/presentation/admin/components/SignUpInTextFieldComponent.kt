@@ -1,4 +1,4 @@
-package com.iftikar.studysphere.presentation.components
+package com.iftikar.studysphere.presentation.admin.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +17,7 @@ fun SignUpInTextFieldComponent(
     modifier: Modifier,
     value: String,
     label: String,
+    supportingText: String? = null,
     onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -35,6 +36,11 @@ fun SignUpInTextFieldComponent(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
         ),
+        supportingText = if (supportingText != null) {
+            { Text(text = supportingText) }
+        } else {
+            null
+        },
         keyboardOptions = keyboardOptions,
         singleLine = true
     )
