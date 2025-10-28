@@ -5,24 +5,50 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.iftikar.studysphere.presentation.navigation.Navigation
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iftikar.studysphere.presentation.admin.registration.AdminAccountViewModel
+import com.iftikar.studysphere.presentation.navigation.Navigation
+import com.iftikar.studysphere.presentation.navigation.Routes
+import com.iftikar.studysphere.shared.SessionHandlingEvent
+import com.iftikar.studysphere.shared.SessionHandlingViewModel
 import com.iftikar.studysphere.ui.theme.StudySphereTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    lateinit var viewModel: AdminAccountViewModel
+    lateinit var sessionHandlingViewModel: SessionHandlingViewModel
+    lateinit var adminAccountViewModel: AdminAccountViewModel
+    lateinit var startDestination: Routes
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            viewModel = hiltViewModel<AdminAccountViewModel>()
+            sessionHandlingViewModel = hiltViewModel<SessionHandlingViewModel>()
+            adminAccountViewModel = hiltViewModel<AdminAccountViewModel>()
+            val eventState by sessionHandlingViewModel.event.collectAsStateWithLifecycle()
+
+            when(eventState) {
+                SessionHandlingEvent.OnAuthFailed -> {
+                    startDestination = Routes.AdminLoginScreenRoute
+                }
+                is SessionHandlingEvent.OnAuthSuccess -> {
+                    startDestination = if ((eventState as SessionHandlingEvent.OnAuthSuccess).isVerified) {
+                        Routes.NextFeatureScreenRoute
+                    } else {
+                        Routes.EmailVerificationScreenRoute
+                    }
+                }
+                else -> Unit
+            }
+
             StudySphereTheme {
-                Navigation(viewModel)
+                if(::startDestination.isInitialized) {
+                    Navigation(adminAccountViewModel, startDestination)
+                }
             }
         }
     }
@@ -33,7 +59,7 @@ class MainActivity : ComponentActivity() {
             val userId = uri.getQueryParameter("userId")
             val secret = uri.getQueryParameter("secret")
             if (userId != null && secret != null) {
-                viewModel.verifyEmail(userId, secret)
+                adminAccountViewModel.verifyEmail(userId, secret)
             }
         }
     }

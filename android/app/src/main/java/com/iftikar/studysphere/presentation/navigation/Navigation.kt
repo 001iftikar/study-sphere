@@ -13,12 +13,13 @@ import com.iftikar.studysphere.presentation.admin.registration.AdminVerification
 
 @Composable
 fun Navigation(
-    adminAccountViewModel: AdminAccountViewModel
+    adminAccountViewModel: AdminAccountViewModel,
+    startDestination: Routes
 ) {
     val navHostController = rememberNavController()
 
     NavHost(
-        navController = navHostController, startDestination = Routes.RoleSelectionScreenRoute
+        navController = navHostController, startDestination = startDestination
     ) {
         composable<Routes.RoleSelectionScreenRoute> {
             RoleChooseScreen(

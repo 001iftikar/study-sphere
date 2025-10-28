@@ -19,9 +19,7 @@ import io.appwrite.models.User
 import io.appwrite.services.Account
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import okio.IOException
 import java.time.Instant
@@ -114,7 +112,7 @@ class AdminRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun checkAuthSession(): EmptyResult<DataError> =
+    override suspend fun checkAuthSession(): Result<Boolean, DataError> =
         withContext(Dispatchers.IO) {
             try {
                 val isConnected = internetConnectivityObserver.isConnected().first()
@@ -128,10 +126,10 @@ class AdminRepositoryImpl @Inject constructor(
                             expire = session.expire.toEpochMilli()
                         )
                     }
-                    Result.Success(Unit)
+                    Result.Success(isVerified)
                 } else {
-                    checkSessionWhenOffline()
-                    Result.Success(Unit)
+                    val localAuthSession = checkSessionWhenOffline()
+                    Result.Success(localAuthSession.isVerified)
                 }
             } catch (ex: Exception) {
                 Log.e("Appwrite-Session", "checkAuthSession: ${ex.message}", )
@@ -150,14 +148,14 @@ class AdminRepositoryImpl @Inject constructor(
     }
 
     // when offline call this fun
-    private suspend fun checkSessionWhenOffline() {
+    private suspend fun checkSessionWhenOffline(): LocalUserSession {
         Log.d("Appwrite-Sess-Off", "checkSessionWhenOnline: Device offline")
-       localUserSessionHandler.readLocalUserSession().collect { session ->
-           Log.d("Appwrite-Sess-Off", "checkSessionWhenOffline: $session")
-           if (session.expire < Instant.now().toEpochMilli()) {
-               throw Exception("Not authorized")
-           }
-       }
+       val localSession = localUserSessionHandler.readLocalUserSession().first()
+        if (localSession.expire < Instant.now().toEpochMilli()) {
+            throw Exception("Not authenticated")
+        }
+
+        return localSession
     }
 }
 
