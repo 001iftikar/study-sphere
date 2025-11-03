@@ -64,20 +64,14 @@ class AdminAccountViewModel @Inject constructor(
     }
 
     private fun signUp() {
-        _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
             adminRepository.signUp(
                 email = _state.value.email,
                 password = _state.value.password,
                 name = _state.value.fullName
             ).onSuccess {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        accountVerificationText = "Hello ${_state.value.fullName}, please verify your email to continue"
-                    )
-                }
-                _event.send(AdminAccountEvent.OnSuccessUnverified())
+                _event.send(AdminAccountEvent.OnSuccessUnverified)
             }.onError { error ->
                 _state.update { it.copy(isLoading = false) }
                 when (error) {
@@ -127,34 +121,24 @@ class AdminAccountViewModel @Inject constructor(
         }
     }
 
-    fun checkAuthSession() {
-        viewModelScope.launch {
-            adminRepository.checkAuthSession()
-        }
-    }
-
     private fun login() {
-        _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
             adminRepository.login(
                 email = _state.value.email,
                 password = _state.value.password
             ).onSuccess { user ->
-                Log.d("Appwrite-VM-login", "login: $user and is ${user.emailVerification}")
                 _state.update {
                     it.copy(
-                        isLoading = false,
-                        email = user.email,
                         fullName = user.name,
-                        accountVerificationText = if (user.emailVerification) "Already verified"
-                        else "Hello ${user.name}, email is not verified, please verify"
+                        email = user.email
                     )
                 }
 
                 if (user.emailVerification) {
-                    _event.send(AdminAccountEvent.OnLoginSuccessVerified())
+                    _event.send(AdminAccountEvent.OnLoginSuccessVerified)
                 } else {
-                    _event.send(AdminAccountEvent.OnSuccessUnverified())
+                    _event.send(AdminAccountEvent.OnSuccessUnverified)
                 }
             }.onError { error ->
                 _state.update { it.copy(isLoading = false) }
@@ -185,7 +169,13 @@ class AdminAccountViewModel @Inject constructor(
 
                     DataError.Remote.AUTH_FAILED -> {
                         _state.update {
-                            it.copy(error = "Authentication failed, try again")
+                            it.copy(error = "Authentication failed, please check your email or password")
+                        }
+                    }
+
+                    DataError.Remote.TOO_MANY_REQUESTS -> {
+                        _state.update {
+                            it.copy(error = "Too many attempts, please try again later")
                         }
                     }
 
@@ -212,8 +202,8 @@ class AdminAccountViewModel @Inject constructor(
                 .onSuccess {
                     _state.update {
                         it.copy(
-                            accountVerificationText = "Verification link has been sent to your email",
-                            isButtonEnabled = false
+                            isButtonEnabled = false,
+                            isLoading = false
                         )
                     }
                 }.onError { error ->
@@ -254,11 +244,8 @@ class AdminAccountViewModel @Inject constructor(
                 .onSuccess {
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            accountVerificationText = "Verification Successful",
-                            isButtonEnabled = true,
-                            accountVerifyButtonText = "Continue",
-                            isVerified = true
+                            isVerified = true,
+                            isButtonEnabled = true
                         )
                     }
                 }.onError { ex ->
@@ -271,7 +258,7 @@ class AdminAccountViewModel @Inject constructor(
 
     private fun setErrorToNull() {
         _state.update {
-            it.copy(error = null)
+            it.copy()
         }
     }
 }

@@ -51,6 +51,7 @@ import androidx.navigation.NavHostController
 import com.iftikar.studysphere.presentation.admin.components.SignUpInButtonComponent
 import com.iftikar.studysphere.presentation.admin.components.SignUpInTextFieldComponent
 import com.iftikar.studysphere.presentation.admin.components.TypewriterTextComponent
+import com.iftikar.studysphere.presentation.navigation.Routes
 import com.iftikar.studysphere.ui.theme.SignInUpBackground
 import kotlinx.coroutines.launch
 
@@ -74,7 +75,7 @@ fun AdminSignUpScreen(
     LaunchedEffect(eventState) {
         when(eventState) {
             is AdminAccountEvent.OnSuccessUnverified -> {
-                navHostController.navigate((eventState as AdminAccountEvent.OnSuccessUnverified).route)
+                navHostController.navigate(Routes.EmailVerificationScreenRoute(name = state.fullName))
             }
             else -> Unit
         }
@@ -193,7 +194,9 @@ fun AdminSignUpScreen(
                         }
                     ) {
                         if (state.isLoading) {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                color = Color.Green
+                            )
                         } else {
                             Text("Sign up")
                         }

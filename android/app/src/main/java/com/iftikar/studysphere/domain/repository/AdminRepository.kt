@@ -4,6 +4,7 @@ import com.iftikar.studysphere.data.dto.UserResponseDto
 import com.iftikar.studysphere.domain.DataError
 import com.iftikar.studysphere.domain.EmptyResult
 import com.iftikar.studysphere.domain.Result
+import com.iftikar.studysphere.domain.model.Session
 import io.appwrite.models.User
 
 interface AdminRepository {
@@ -11,5 +12,5 @@ interface AdminRepository {
     suspend fun login(email: String, password: String): Result<User<UserResponseDto>, DataError>
     suspend fun sendEmailVerification(url: String): EmptyResult<DataError>
     suspend fun verifyEmail(userId: String, secret: String): EmptyResult<DataError>
-    suspend fun checkAuthSession(): Result<Boolean, DataError>
+    suspend fun checkAuthSession(): Result<Session, DataError>
 }
