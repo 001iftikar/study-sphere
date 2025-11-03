@@ -74,8 +74,8 @@ class AdminRepositoryImpl @Inject constructor(
             Result.Success(user)
 
         } catch (ex: AppwriteException) {
-            Log.e("Appwrite-Repo-Login-Error", "signUp: ${ex.message}")
-            Result.Error(DataError.Remote.UNKNOWN)
+            Log.e("Appwrite-Repo-Login-Error", "signUp: ${ex.type} ${ex.message}")
+            Result.Error(ex.toDataError())
         } catch (ex: IOException) {
             Result.Error(DataError.Remote.NO_INTERNET)
         } catch (ex: Exception) {

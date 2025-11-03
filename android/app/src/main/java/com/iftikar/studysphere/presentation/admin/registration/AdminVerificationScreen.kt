@@ -1,6 +1,5 @@
 package com.iftikar.studysphere.presentation.admin.registration
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,8 +28,7 @@ import com.iftikar.studysphere.ui.theme.SignInUpBackground
 fun AdminVerificationScreen(
     navHostController: NavHostController,
     viewModel: AdminAccountViewModel,
-    name: String,
-    isVerified: Boolean
+    name: String
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -47,12 +45,14 @@ fun AdminVerificationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Log.d(
-                    "Appwrite-Com-User",
-                    "AdminVerificationScreen: ${state.fullName} & ${state.email}"
-                )
                 Text(
-                    text = if (isVerified) "Hi ${name}, You are verified" else "Hi ${name}, Please verify your email",
+                    text = if (state.isVerified) {
+                        "Hi ${name}, You are verified"
+                    } else if (!state.isButtonEnabled) {
+                        "Verification email has been sent to your email"
+                    } else {
+                        "Hi $name, Please verify your email"
+                    },
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
                 )
@@ -70,7 +70,7 @@ fun AdminVerificationScreen(
                         )
                     ) {
                         Text(
-                            text = if (isVerified) "Continue" else "Verify",
+                            text = if (state.isVerified) "Continue" else "Verify",
                             style = MaterialTheme.typography.titleMedium
                         )
                     }

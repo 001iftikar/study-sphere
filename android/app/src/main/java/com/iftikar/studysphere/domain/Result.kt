@@ -45,18 +45,13 @@ inline fun <T, E: Error> Result<T, E>.onError(action: (E) -> Unit): Result<T, E>
 
 fun AppwriteException.toDataError(): DataError.Remote {
     return when (this.type) {
-        "Rate limit for the current endpoint has been exceeded" -> DataError.Remote.TOO_MANY_REQUESTS
         "user_already_exists" -> DataError.Remote.USER_EXISTS
         "general_argument_invalid" -> DataError.Remote.INVALID_EMAIL
         "user_invalid_credentials" -> DataError.Remote.AUTH_FAILED
         "user_password_mismatch" -> DataError.Remote.PASSWORD_MISMATCH
+        "general_rate_limit_exceeded" -> DataError.Remote.TOO_MANY_REQUESTS
         "general_timeout" -> DataError.Remote.REQUEST_TIMEOUT
-        else -> when (this.code) {
-            408 -> DataError.Remote.REQUEST_TIMEOUT
-            429 -> DataError.Remote.TOO_MANY_REQUESTS
-            500 -> DataError.Remote.SERVER
-            else -> DataError.Remote.UNKNOWN
-        }
+        else -> DataError.Remote.UNKNOWN
     }
 }
 

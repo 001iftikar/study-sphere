@@ -11,7 +11,7 @@ sealed interface Routes {
     @Serializable
     object AdminRegisterScreenRoute : Routes
     @Serializable
-    object EmailVerificationScreenRoute : Routes
+    data class EmailVerificationScreenRoute(val name: String) : Routes
     @Serializable
     object NextFeatureScreenRoute : Routes
 }

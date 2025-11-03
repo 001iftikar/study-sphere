@@ -61,11 +61,11 @@ fun AdminSignInScreen(
     LaunchedEffect(eventState) {
         when (eventState) {
             is AdminAccountEvent.OnLoginSuccessVerified -> {
-                navHostController.navigate((eventState as AdminAccountEvent.OnLoginSuccessVerified).route)
+                navHostController.navigate(Routes.EmailVerificationScreenRoute(name = state.fullName))
             }
 
             is AdminAccountEvent.OnSuccessUnverified -> {
-                navHostController.navigate((eventState as AdminAccountEvent.OnSuccessUnverified).route)
+                navHostController.navigate(Routes.EmailVerificationScreenRoute(name = state.fullName))
             }
 
             else -> Unit

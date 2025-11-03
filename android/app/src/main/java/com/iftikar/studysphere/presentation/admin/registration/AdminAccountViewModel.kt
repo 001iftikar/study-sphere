@@ -65,18 +65,15 @@ class AdminAccountViewModel @Inject constructor(
 
     private fun signUp() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, error = null) }
             adminRepository.signUp(
                 email = _state.value.email,
                 password = _state.value.password,
                 name = _state.value.fullName
             ).onSuccess {
-                _state.update {
-                    it.copy()
-                }
-                _event.send(AdminAccountEvent.OnSuccessUnverified())
+                _event.send(AdminAccountEvent.OnSuccessUnverified)
             }.onError { error ->
-                _state.update { it.copy() }
+                _state.update { it.copy(isLoading = false) }
                 when (error) {
                     DataError.Remote.REQUEST_TIMEOUT -> {
                         _state.update {
@@ -126,12 +123,11 @@ class AdminAccountViewModel @Inject constructor(
 
     private fun login() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, error = null) }
             adminRepository.login(
                 email = _state.value.email,
                 password = _state.value.password
             ).onSuccess { user ->
-                Log.d("Appwrite-VM-login", "login: $user and is ${user.emailVerification}")
                 _state.update {
                     it.copy(
                         fullName = user.name,
@@ -140,12 +136,12 @@ class AdminAccountViewModel @Inject constructor(
                 }
 
                 if (user.emailVerification) {
-                    _event.send(AdminAccountEvent.OnLoginSuccessVerified())
+                    _event.send(AdminAccountEvent.OnLoginSuccessVerified)
                 } else {
-                    _event.send(AdminAccountEvent.OnSuccessUnverified())
+                    _event.send(AdminAccountEvent.OnSuccessUnverified)
                 }
             }.onError { error ->
-                _state.update { it.copy() }
+                _state.update { it.copy(isLoading = false) }
                 when (error) {
                     DataError.Remote.REQUEST_TIMEOUT -> {
                         _state.update {
@@ -173,7 +169,13 @@ class AdminAccountViewModel @Inject constructor(
 
                     DataError.Remote.AUTH_FAILED -> {
                         _state.update {
-                            it.copy(error = "Authentication failed, try again")
+                            it.copy(error = "Authentication failed, please check your email or password")
+                        }
+                    }
+
+                    DataError.Remote.TOO_MANY_REQUESTS -> {
+                        _state.update {
+                            it.copy(error = "Too many attempts, please try again later")
                         }
                     }
 
@@ -200,7 +202,8 @@ class AdminAccountViewModel @Inject constructor(
                 .onSuccess {
                     _state.update {
                         it.copy(
-                            isButtonEnabled = false
+                            isButtonEnabled = false,
+                            isLoading = false
                         )
                     }
                 }.onError { error ->
@@ -241,7 +244,8 @@ class AdminAccountViewModel @Inject constructor(
                 .onSuccess {
                     _state.update {
                         it.copy(
-                            isVerified = true
+                            isVerified = true,
+                            isButtonEnabled = true
                         )
                     }
                 }.onError { ex ->

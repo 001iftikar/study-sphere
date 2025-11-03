@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = if ((eventState as SessionHandlingEvent.OnAuthSuccess).isVerified) {
                         Routes.NextFeatureScreenRoute
                     } else {
-                        Routes.EmailVerificationScreenRoute
+                        Routes.EmailVerificationScreenRoute(name = (eventState as SessionHandlingEvent.OnAuthSuccess).name)
                     }
                 }
                 else -> Unit

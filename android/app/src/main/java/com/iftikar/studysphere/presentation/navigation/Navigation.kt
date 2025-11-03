@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.iftikar.studysphere.presentation.admin.NextFeatureScreen
 import com.iftikar.studysphere.presentation.common.RoleChooseScreen
 import com.iftikar.studysphere.presentation.admin.registration.AdminAccountViewModel
@@ -43,9 +44,11 @@ fun Navigation(
         }
 
         composable<Routes.EmailVerificationScreenRoute> {
+            val args = it.toRoute<Routes.EmailVerificationScreenRoute>()
 
             AdminVerificationScreen(
-                viewModel = adminAccountViewModel, navHostController = navHostController
+                viewModel = adminAccountViewModel, navHostController = navHostController,
+                name = args.name
             )
         }
 
