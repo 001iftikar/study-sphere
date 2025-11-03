@@ -193,7 +193,9 @@ fun AdminSignUpScreen(
                         }
                     ) {
                         if (state.isLoading) {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                color = Color.Green
+                            )
                         } else {
                             Text("Sign up")
                         }

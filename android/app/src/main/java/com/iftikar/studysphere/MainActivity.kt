@@ -48,6 +48,8 @@ class MainActivity : ComponentActivity() {
             StudySphereTheme {
                 if(::startDestination.isInitialized) {
                     Navigation(adminAccountViewModel, startDestination)
+                } else {
+                    // todo -> implement a splash screen later
                 }
             }
         }

@@ -7,8 +7,6 @@ data class AdminAccountState(
     val username: String = "",
     val email: String = "",
     val password: String = "",
-    val accountVerificationText: String = "",
-    val accountVerifyButtonText: String = "Verify now",
     val isButtonEnabled: Boolean = true,
     val isVerified: Boolean = false,
     val isPasswordVisible: Boolean = false,

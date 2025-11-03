@@ -14,9 +14,9 @@ class LocalUserSessionHandler(
         serializer = LocalUserSessionSerializer
     )
 
-    suspend fun setLocalUserSession(isVerified: Boolean, expire: Long) {
+    suspend fun setLocalUserSession(isVerified: Boolean, name: String, expire: Long) {
         context.dataStore.updateData {
-            it.copy(isVerified = isVerified, expire = expire)
+            it.copy(isVerified = isVerified, name = name, expire = expire)
         }
     }
 

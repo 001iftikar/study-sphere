@@ -68,6 +68,7 @@ class AdminRepositoryImpl @Inject constructor(
             val user = account.get(nestedType = UserResponseDto::class.java)
             localUserSessionHandler.setLocalUserSession(
                 isVerified = user.emailVerification,
+                name = user.name,
                 expire = session.expire.toEpochMilli()
             )
             Result.Success(user)
@@ -112,27 +113,41 @@ class AdminRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun checkAuthSession(): Result<Boolean, DataError> =
+    override suspend fun checkAuthSession(): Result<com.iftikar.studysphere.domain.model.Session, DataError> =
         withContext(Dispatchers.IO) {
             try {
                 val isConnected = internetConnectivityObserver.isConnected().first()
                 if (isConnected) {
                     val session = checkSessionWhenOnline()
-                    val isVerified = account.get().emailVerification
+                    val user = account.get()
+                    val isVerified = user.emailVerification
+                    val name = user.name
                     val localSession = localUserSessionHandler.readLocalUserSession().first()
                     if (session.expire.toEpochMilli() != localSession.expire) {
                         localUserSessionHandler.setLocalUserSession(
                             isVerified = isVerified,
+                            name = name,
                             expire = session.expire.toEpochMilli()
                         )
                     }
-                    Result.Success(isVerified)
+                    Result.Success(
+                        com.iftikar.studysphere.domain.model.Session(
+                            userName = name,
+                            isVerified = isVerified
+                        )
+                    )
                 } else {
                     val localAuthSession = checkSessionWhenOffline()
-                    Result.Success(localAuthSession.isVerified)
+                    Result.Success(
+                        com.iftikar.studysphere.domain.model.Session(
+                            userName =
+                                localAuthSession.name,
+                            isVerified = localAuthSession.isVerified
+                        )
+                    )
                 }
             } catch (ex: Exception) {
-                Log.e("Appwrite-Session", "checkAuthSession: ${ex.message}", )
+                Log.e("Appwrite-Session", "checkAuthSession: ${ex.message}")
                 Result.Error(DataError.Remote.AUTH_FAILED)
             }
         }
@@ -150,11 +165,10 @@ class AdminRepositoryImpl @Inject constructor(
     // when offline call this fun
     private suspend fun checkSessionWhenOffline(): LocalUserSession {
         Log.d("Appwrite-Sess-Off", "checkSessionWhenOnline: Device offline")
-       val localSession = localUserSessionHandler.readLocalUserSession().first()
+        val localSession = localUserSessionHandler.readLocalUserSession().first()
         if (localSession.expire < Instant.now().toEpochMilli()) {
             throw Exception("Not authenticated")
         }
-
         return localSession
     }
 }
