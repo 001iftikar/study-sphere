@@ -31,7 +31,7 @@ fun AdminVerificationScreen(
     name: String
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
+    val onAction = viewModel::onAction
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -62,7 +62,10 @@ fun AdminVerificationScreen(
                         onClick = if (!state.isVerified) {
                             { viewModel.sendEmailVerification() }
                         } else {
-                            { navHostController.navigate(Routes.NextFeatureScreenRoute) }
+                            {
+                                onAction(AdminAccountAction.OnContinueClick)
+                                navHostController.navigate(Routes.NextFeatureScreenRoute)
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,

@@ -65,7 +65,6 @@ fun AdminSignUpScreen(
     val isSignupEnabled by remember(state) {
         derivedStateOf {
             state.fullName.isNotEmpty() &&
-                    state.username.isNotEmpty() &&
                     state.email.isNotEmpty() &&
                     state.password.length >= 8
         }
@@ -73,10 +72,11 @@ fun AdminSignUpScreen(
     val onAction = viewModel::onAction
 
     LaunchedEffect(eventState) {
-        when(eventState) {
+        when (eventState) {
             is AdminAccountEvent.OnSuccessUnverified -> {
                 navHostController.navigate(Routes.EmailVerificationScreenRoute(name = state.fullName))
             }
+
             else -> Unit
         }
     }
@@ -116,16 +116,6 @@ fun AdminSignUpScreen(
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words
                         )
-                    )
-                    Spacer(Modifier.height(8.dp))
-                }
-
-                item {
-                    SignUpInTextFieldComponent(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = state.username,
-                        onValueChange = { onAction(AdminAccountAction.OnUsernameChange(it)) },
-                        label = "Username",
                     )
                     Spacer(Modifier.height(8.dp))
                 }

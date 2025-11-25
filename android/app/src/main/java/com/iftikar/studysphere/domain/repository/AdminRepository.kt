@@ -13,4 +13,5 @@ interface AdminRepository {
     suspend fun sendEmailVerification(url: String): EmptyResult<DataError>
     suspend fun verifyEmail(userId: String, secret: String): EmptyResult<DataError>
     suspend fun checkAuthSession(): Result<Session, DataError>
+    suspend fun registerAdmin(): EmptyResult<DataError>
 }

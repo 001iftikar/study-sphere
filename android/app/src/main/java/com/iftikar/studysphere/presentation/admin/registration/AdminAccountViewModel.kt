@@ -46,12 +46,6 @@ class AdminAccountViewModel @Inject constructor(
                 }
             }
 
-            is AdminAccountAction.OnUsernameChange -> {
-                _state.update {
-                    it.copy(username = action.username)
-                }
-            }
-
             AdminAccountAction.OnPasswordVisibilityChange -> {
                 _state.update {
                     it.copy(isPasswordVisible = !it.isPasswordVisible)
@@ -60,9 +54,10 @@ class AdminAccountViewModel @Inject constructor(
 
             AdminAccountAction.OnSignUp -> signUp()
             AdminAccountAction.OnLogIn -> login()
+
+            AdminAccountAction.OnContinueClick -> registerAdmin()
         }
     }
-
     private fun signUp() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
@@ -255,6 +250,13 @@ class AdminAccountViewModel @Inject constructor(
                 }
         }
     }
+
+    private fun registerAdmin() {
+        viewModelScope.launch {
+            adminRepository.registerAdmin()
+        }
+    }
+
 
     private fun setErrorToNull() {
         _state.update {

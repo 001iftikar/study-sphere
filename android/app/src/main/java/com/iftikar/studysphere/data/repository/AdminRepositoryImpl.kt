@@ -1,6 +1,8 @@
 package com.iftikar.studysphere.data.repository
 
 import android.util.Log
+import com.iftikar.studysphere.data.dto.AdminRequestDto
+import com.iftikar.studysphere.data.dto.AdminResponseDto
 import com.iftikar.studysphere.data.dto.UserResponseDto
 import com.iftikar.studysphere.domain.DataError
 import com.iftikar.studysphere.domain.EmptyResult
@@ -10,6 +12,7 @@ import com.iftikar.studysphere.domain.toDataError
 import com.iftikar.studysphere.shared.InternetConnectivityObserver
 import com.iftikar.studysphere.shared.LocalUserSession
 import com.iftikar.studysphere.shared.LocalUserSessionHandler
+import com.iftikar.studysphere.utils.AppConstants
 import com.iftikar.studysphere.utils.toEpochMilli
 import io.appwrite.Client
 import io.appwrite.ID
@@ -17,6 +20,7 @@ import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Session
 import io.appwrite.models.User
 import io.appwrite.services.Account
+import io.appwrite.services.TablesDB
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -30,13 +34,13 @@ class AdminRepositoryImpl @Inject constructor(
     private val internetConnectivityObserver: InternetConnectivityObserver
 ) : AdminRepository {
     val account = Account(client)
+    val tablesDb = TablesDB(client)
     override suspend fun signUp(
         email: String,
         password: String,
         name: String
     ): EmptyResult<DataError> = withContext(Dispatchers.IO) {
         try {
-            // todo-> username check will be done here before creating the user to store in db
             account.create(
                 userId = ID.unique(),
                 email = email,
@@ -171,6 +175,34 @@ class AdminRepositoryImpl @Inject constructor(
         }
         return localSession
     }
+
+    // insert admin to data base
+    override suspend fun registerAdmin(): EmptyResult<DataError> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val admin = account.get(nestedType = AdminResponseDto::class.java)
+                val request = AdminRequestDto(
+                    email = admin.email,
+                    name = admin.name
+                )
+                tablesDb.createRow(
+                    databaseId = AppConstants.AppwriteConstants.DATABASE_ID,
+                    tableId = AppConstants.AppwriteConstants.ADMIN_TABLE_ID,
+                    rowId = ID.unique(),
+                    data = request,
+                )
+                Result.Success(Unit)
+            } catch (ex: AppwriteException) {
+                Log.e("Appwrite-Db-Admin", "registerAdmin: ${ex.message}", )
+                Result.Error(ex.toDataError())
+            } catch (ex: IOException) {
+                Result.Error(DataError.Remote.NO_INTERNET)
+            } catch (ex: Exception) {
+                Result.Error(DataError.Remote.UNKNOWN)
+            }
+        }
+    }
+
 }
 
 
