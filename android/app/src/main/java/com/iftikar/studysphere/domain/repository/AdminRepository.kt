@@ -1,5 +1,6 @@
 package com.iftikar.studysphere.domain.repository
 
+import com.iftikar.studysphere.data.dto.AdminDto
 import com.iftikar.studysphere.data.dto.UserResponseDto
 import com.iftikar.studysphere.domain.DataError
 import com.iftikar.studysphere.domain.EmptyResult
@@ -13,4 +14,5 @@ interface AdminRepository {
     suspend fun sendEmailVerification(url: String): EmptyResult<DataError>
     suspend fun verifyEmail(userId: String, secret: String): EmptyResult<DataError>
     suspend fun checkAuthSession(): Result<Session, DataError>
+    suspend fun createAdmin(adminDto: AdminDto): EmptyResult<DataError>
 }

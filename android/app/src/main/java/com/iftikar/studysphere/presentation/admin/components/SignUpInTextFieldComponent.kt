@@ -1,5 +1,6 @@
 package com.iftikar.studysphere.presentation.admin.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -35,9 +36,15 @@ fun SignUpInTextFieldComponent(
             focusedIndicatorColor = MaterialTheme.colorScheme.primary,
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.White,
+            focusedSupportingTextColor = Color.White,
+            unfocusedSupportingTextColor = Color.White
         ),
         supportingText = if (supportingText != null) {
-            { Text(text = supportingText) }
+            { Text(text = supportingText, color = Color.White) }
         } else {
             null
         },

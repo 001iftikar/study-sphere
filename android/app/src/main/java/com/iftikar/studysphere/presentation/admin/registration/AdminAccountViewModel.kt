@@ -3,6 +3,7 @@ package com.iftikar.studysphere.presentation.admin.registration
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iftikar.studysphere.data.dto.AdminDto
 import com.iftikar.studysphere.domain.DataError
 import com.iftikar.studysphere.domain.onError
 import com.iftikar.studysphere.domain.onSuccess
@@ -253,6 +254,22 @@ class AdminAccountViewModel @Inject constructor(
                         it.copy(error = "Verification unsuccessful, please try again")
                     }
                 }
+        }
+    }
+
+    fun createAdmin() {
+        viewModelScope.launch {
+            adminRepository.createAdmin(
+                AdminDto(
+                    name = _state.value.fullName,
+                    email = _state.value.email,
+                    phone = null
+                )
+            ).onSuccess {
+
+            }.onError {
+
+            }
         }
     }
 

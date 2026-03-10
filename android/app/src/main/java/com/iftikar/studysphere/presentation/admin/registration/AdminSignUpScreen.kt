@@ -198,7 +198,7 @@ fun AdminSignUpScreen(
                                 color = Color.Green
                             )
                         } else {
-                            Text("Sign up")
+                            Text("Sign up", color = Color.White)
                         }
                     }
                     Spacer(Modifier.height(12.dp))

@@ -1,6 +1,7 @@
 package com.iftikar.studysphere.data.repository
 
 import android.util.Log
+import com.iftikar.studysphere.data.dto.AdminDto
 import com.iftikar.studysphere.data.dto.UserResponseDto
 import com.iftikar.studysphere.domain.DataError
 import com.iftikar.studysphere.domain.EmptyResult
@@ -10,6 +11,7 @@ import com.iftikar.studysphere.domain.toDataError
 import com.iftikar.studysphere.shared.InternetConnectivityObserver
 import com.iftikar.studysphere.shared.LocalUserSession
 import com.iftikar.studysphere.shared.LocalUserSessionHandler
+import com.iftikar.studysphere.utils.AppConstants
 import com.iftikar.studysphere.utils.toEpochMilli
 import io.appwrite.Client
 import io.appwrite.ID
@@ -17,6 +19,7 @@ import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Session
 import io.appwrite.models.User
 import io.appwrite.services.Account
+import io.appwrite.services.TablesDB
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -30,6 +33,7 @@ class AdminRepositoryImpl @Inject constructor(
     private val internetConnectivityObserver: InternetConnectivityObserver
 ) : AdminRepository {
     val account = Account(client)
+    val tablesDB = TablesDB(client)
     override suspend fun signUp(
         email: String,
         password: String,
@@ -170,6 +174,29 @@ class AdminRepositoryImpl @Inject constructor(
             throw Exception("Not authenticated")
         }
         return localSession
+    }
+
+    override suspend fun createAdmin(adminDto: AdminDto): EmptyResult<DataError> = withContext(
+        Dispatchers.IO) {
+        try {
+            val data = mapOf(
+                "email" to adminDto.email,
+                "name" to adminDto.name,
+                "phone" to adminDto.phone
+            )
+            val rows = tablesDB.createRow(
+                databaseId = AppConstants.DATABASE_ID,
+                tableId = AppConstants.ADMIN_TABLE_ID,
+                rowId = ID.unique(),
+                data = data,
+                nestedType = AdminDto::class.java
+            )
+            Log.d("Admin", "createAdmin: $rows")
+            Result.Success(Unit)
+        } catch (ex: Exception) {
+            Log.e("Admin", "createAdmin: $ex")
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
     }
 }
 

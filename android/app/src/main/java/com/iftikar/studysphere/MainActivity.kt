@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
             when(eventState) {
                 SessionHandlingEvent.OnAuthFailed -> {
-                    startDestination = Routes.AdminLoginScreenRoute
+                    startDestination = Routes.RoleSelectionScreenRoute
                 }
                 is SessionHandlingEvent.OnAuthSuccess -> {
                     startDestination = if ((eventState as SessionHandlingEvent.OnAuthSuccess).isVerified) {
@@ -45,7 +45,9 @@ class MainActivity : ComponentActivity() {
                 else -> Unit
             }
 
-            StudySphereTheme {
+            StudySphereTheme(
+                dynamicColor = false
+            ) {
                 if(::startDestination.isInitialized) {
                     Navigation(adminAccountViewModel, startDestination)
                 } else {

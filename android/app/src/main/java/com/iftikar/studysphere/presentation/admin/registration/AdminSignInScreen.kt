@@ -61,7 +61,7 @@ fun AdminSignInScreen(
     LaunchedEffect(eventState) {
         when (eventState) {
             is AdminAccountEvent.OnLoginSuccessVerified -> {
-                navHostController.navigate(Routes.EmailVerificationScreenRoute(name = state.fullName))
+                navHostController.navigate(Routes.NextFeatureScreenRoute)
             }
 
             is AdminAccountEvent.OnSuccessUnverified -> {
@@ -137,7 +137,7 @@ fun AdminSignInScreen(
                             color = Color.Green
                         )
                     } else {
-                        Text("Log in")
+                        Text("Log in", color = Color.White)
                     }
                 }
                 Spacer(Modifier.height(12.dp))
@@ -150,7 +150,7 @@ fun AdminSignInScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Not registered?")
+                    Text("Not registered?", color = Color.White)
                     TextButton(
                         onClick = {
                             navHostController.navigate(Routes.AdminRegisterScreenRoute) {
